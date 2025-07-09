@@ -123,7 +123,7 @@ scatter = alt.Chart(filtered_df).mark_circle().encode(
 ).transform_filter(
     country_selection
 ).properties(
-    width=CHART_WIDTH/2,
+   # width=CHART_WIDTH/2,
     height=CHART_HEIGHT,
     title='Scatter Plot: Yield vs. ' + x_axis_title
 ).interactive()
@@ -137,7 +137,7 @@ boxplot = alt.Chart(filtered_df).mark_boxplot().encode(
 ).add_params(
     crop_selection
 ).properties(
-    width=CHART_WIDTH/2,
+   # width=CHART_WIDTH/2,
     height=CHART_HEIGHT,
     title=f'Box Plot: {x_axis_title} by Crop'
 )
@@ -153,18 +153,22 @@ line_chart = alt.Chart(filtered_df).mark_line(point=True).encode(
 ).add_params(
     crop_selection
 ).properties(
-    width=CHART_WIDTH,
+   # width=CHART_WIDTH,
     height=CHART_HEIGHT,
     title='Crop Yield Over Time by Crop (Filtered by Country)'
 ).interactive()
 
-# Display all graphs one underneath the other (all same size)
-layout = alt.vconcat(
-    bar,
-    alt.hconcat(scatter, boxplot),
-    line_chart
-).resolve_scale(
-    color='independent'
-)
+# Display charts using Streamlit's layout system
+st.altair_chart(bar, use_container_width=True)
 
-st.altair_chart(layout, use_container_width=False)
+# Two columns: scatter and boxplot
+col1, col2 = st.columns(2)
+
+with col1:
+    st.altair_chart(scatter, use_container_width=True)
+
+with col2:
+    st.altair_chart(boxplot, use_container_width=True)
+
+# Line chart at the bottom
+st.altair_chart(line_chart, use_container_width=True)
