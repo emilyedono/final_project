@@ -23,10 +23,10 @@ st.markdown(
 # Filters on Sidebar
 st.sidebar.header("Filters")  # Move filters to the sidebar
 
-if st.sidebar.button("🔄 Reset Click Filters"):
-    for key in st.session_state.keys():
-        del st.session_state[key]
-    st.rerun()
+# if st.sidebar.button("🔄 Reset Click Filters"):
+#     for key in st.session_state.keys():
+#         del st.session_state[key]
+#     st.rerun()
 
 # Temperature unit selector
 temp_unit = st.sidebar.radio(
