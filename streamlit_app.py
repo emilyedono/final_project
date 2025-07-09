@@ -9,7 +9,7 @@ import pydeck as pdk
 st.set_page_config(page_title="Crop Yield Impact Through Climate Change and Pesticides", layout="wide")
 
 # read in data
-df = pd.read_csv('group_data.csv')
+df = pd.read_csv('group_data_new.csv')
 
 # Smaller title using custom HTML and CSS
 st.markdown(
@@ -95,15 +95,29 @@ CHART_WIDTH = 900
 CHART_HEIGHT = 400
 
 # Horizontal Bar Chart of Country
-bar = alt.Chart(filtered_df).mark_bar(color="#5F4747").encode(
-    x=alt.X('hg/ha_yield:Q', aggregate='sum', title='Yield (hg/ha)'),
+bar = alt.Chart(filtered_df).mark_bar(color="#5F4747", height=20).encode(
+    x=alt.X('total_yield:Q', title='Yield (hg/ha)'),
     y=alt.Y('country:N', title='Country', sort='-x'),
     opacity=alt.condition(country_selection, alt.value(1), alt.value(0.2)),
-).add_params(country_selection
- ).transform_filter(crop_selection).properties(
+).transform_aggregate(
+    total_yield='sum(hg/ha_yield)',
+    groupby=['country', 'Item']  # Keep crop info for filtering
+).transform_filter(
+    crop_selection  # Now this works!
+).transform_aggregate(
+    total_yield='sum(total_yield)',  # Re-aggregate across selected crops
+    groupby=['country']
+).transform_window(
+    rank='rank(total_yield)',
+    sort=[alt.SortField('total_yield', order='descending')]
+).transform_filter(
+    alt.datum.rank <= 10
+).add_params(
+    country_selection
+).properties(
     width=CHART_WIDTH,
-    height=CHART_HEIGHT,
-    title='Total Yield by Country'
+    height=alt.Step(30),
+    title='Top 10 Countries by Total Yield'
 ).interactive()
 
 # 1. Scatter plot with legend and selection
