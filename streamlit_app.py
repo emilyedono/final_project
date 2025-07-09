@@ -23,6 +23,11 @@ st.markdown(
 # Filters on Sidebar
 st.sidebar.header("Filters")  # Move filters to the sidebar
 
+if st.sidebar.button("🔄 Reset Click Filters"):
+    for key in st.session_state.keys():
+        del st.session_state[key]
+    st.rerun()
+
 # Temperature unit selector
 temp_unit = st.sidebar.radio(
     "Temperature Unit",
@@ -65,6 +70,7 @@ x_axis_labels = {
 }
 x_axis_label_list = [x_axis_labels[key] for key in x_axis_options]
 x_axis_choice_label = st.sidebar.selectbox("Select Variable", options=x_axis_label_list)
+
 
 # Map label back to x_axis_options key
 x_axis_choice = [k for k,v in x_axis_labels.items() if v == x_axis_choice_label][0]
