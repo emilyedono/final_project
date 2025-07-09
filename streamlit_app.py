@@ -83,12 +83,12 @@ country_selection = alt.selection_point(
     #bind='legend',
     on='click'
 )
-crop_selection = alt.selection_point(
-    fields=['Item'],
-    empty='all',
-    bind='legend',
-    on='click'
-)
+# crop_selection = alt.selection_point(
+#     fields=['Item'],
+#     empty='all',
+#     bind='legend',
+#     # on='click'
+# )
 
 # Define a standard width and height for all charts
 CHART_WIDTH = 900
@@ -100,9 +100,7 @@ bar = alt.Chart(filtered_df).mark_bar().encode(
     y=alt.Y('country:N', title='Country', sort='-x'),
     opacity=alt.condition(country_selection, alt.value(1), alt.value(0.2)),
 ).add_params(country_selection
-).transform_filter(
-    crop_selection
-).properties(
+ ).properties(
     width=CHART_WIDTH,
     height=CHART_HEIGHT,
     title='Total Yield by Country'
@@ -112,16 +110,15 @@ bar = alt.Chart(filtered_df).mark_bar().encode(
 scatter = alt.Chart(filtered_df).mark_circle().encode(
     x=alt.X(f'{x_axis_choice}:Q', title=x_axis_title),
     y=alt.Y('hg/ha_yield:Q', title='Yield (hg/ha)'),
-    color=alt.condition(
-        crop_selection,
-        alt.Color('Item:N', legend=alt.Legend(title="Crop", columns=3)),
-        alt.value('lightgray')),
-    opacity=alt.condition(crop_selection, alt.value(1), alt.value(0.2)),
+    # color=alt.condition(
+    #     crop_selection,
+    #     alt.Color('Item:N', legend=None),
+    #     alt.value('lightgray')),
+    color=alt.Color('Item:N', legend=None),
+    #opacity=alt.condition(crop_selection, alt.value(1), alt.value(0.2)),
     tooltip=['country:N', f'{x_axis_choice}:Q', 'hg/ha_yield:Q', 'Item:N', 'food_supply:Q']
-).add_params(
-    crop_selection
-).transform_filter(
-    country_selection
+   ).transform_filter(
+      country_selection
 ).properties(
    # width=CHART_WIDTH/2,
     height=CHART_HEIGHT,
@@ -131,44 +128,46 @@ scatter = alt.Chart(filtered_df).mark_circle().encode(
 # 2. Box plot (no selection)
 boxplot = alt.Chart(filtered_df).mark_boxplot().encode(
     x=alt.X('Item:N', title='Crop', axis=alt.Axis(labelAngle=-45)),
-    y=alt.Y(f'{x_axis_choice}:Q', title=x_axis_title)
-).transform_filter(
-    country_selection
-).add_params(
-    crop_selection
+    y=alt.Y(f'{x_axis_choice}:Q', title=x_axis_title),
+    color=alt.Color('Item:N', title='Crop', legend=None),
+    #opacity=alt.condition(crop_selection, alt.value(1), alt.value(0.2)),
+# ).transform_filter(
+#     country_selection
 ).properties(
    # width=CHART_WIDTH/2,
     height=CHART_HEIGHT,
     title=f'Box Plot: {x_axis_title} by Crop'
-)
+).interactive()
 
 # 3. Line chart (no selection)
 line_chart = alt.Chart(filtered_df).mark_line(point=True).encode(
     x=alt.X('Year:O', title='Year'),
     y=alt.Y('sum(hg/ha_yield):Q', title='Total Yield (hg/ha)'),
-    color=alt.Color('Item:N', title='Crop'),
-    tooltip=['Year:O', 'Item:N', 'hg/ha_yield:Q', 'country:N']
-).transform_filter(
-    country_selection
-).add_params(
-    crop_selection
+    color=alt.Color('Item:N', title='Crop', legend=alt.Legend(title='Crop', orient='top')),
+    tooltip=[
+        alt.Tooltip('Year:O', title='Year'),
+        alt.Tooltip('Item:N', title='Crop'),
+        alt.Tooltip('sum(hg/ha_yield):Q', title='Total Yield (hg/ha)')
+    ]
 ).properties(
-   # width=CHART_WIDTH,
     height=CHART_HEIGHT,
     title='Crop Yield Over Time by Crop (Filtered by Country)'
 ).interactive()
 
-# Display charts using Streamlit's layout system
+
+#st.altair_chart(bar, use_container_width=True)
+
+# # Display charts using Streamlit's layout system
 st.altair_chart(bar, use_container_width=True)
 
-# Two columns: scatter and boxplot
+# # Two columns: scatter and boxplot
 col1, col2 = st.columns(2)
 
 with col1:
     st.altair_chart(scatter, use_container_width=True)
 
 with col2:
-    st.altair_chart(boxplot, use_container_width=True)
+     st.altair_chart(boxplot, use_container_width=True)
 
-# Line chart at the bottom
+# # Line chart at the bottom
 st.altair_chart(line_chart, use_container_width=True)
