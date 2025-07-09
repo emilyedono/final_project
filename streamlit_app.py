@@ -18,7 +18,7 @@ st.markdown(
 )
 
 # Set a smaller width for the image (e.g., 400px)
-st.image("crops-growing-in-thailand.jpg", width=600)
+#st.image("crops-growing-in-thailand.jpg", width=600)
 
 # Filters on Sidebar
 st.sidebar.header("Filters")  # Move filters to the sidebar
@@ -95,7 +95,7 @@ CHART_WIDTH = 900
 CHART_HEIGHT = 400
 
 # Horizontal Bar Chart of Country
-bar = alt.Chart(filtered_df).mark_bar().encode(
+bar = alt.Chart(filtered_df).mark_bar(color="#5F4747").encode(
     x=alt.X('hg/ha_yield:Q', aggregate='sum', title='Yield (hg/ha)'),
     y=alt.Y('country:N', title='Country', sort='-x'),
     opacity=alt.condition(country_selection, alt.value(1), alt.value(0.2)),
@@ -122,7 +122,7 @@ scatter = alt.Chart(filtered_df).mark_circle().encode(
 ).add_params(crop_selection).properties(
    # width=CHART_WIDTH/2,
     height=CHART_HEIGHT,
-    title='Scatter Plot: Yield vs. ' + x_axis_title
+    title='Yield vs. ' + x_axis_title
 ).interactive()
 
 # 2. Box plot (no selection)
@@ -130,10 +130,10 @@ boxplot = alt.Chart(filtered_df).mark_boxplot().encode(
     x=alt.X('Item:N', title='Crop', axis=alt.Axis(labelAngle=-45)),
     y=alt.Y(f'{x_axis_choice}:Q', title=x_axis_title),
     color=alt.Color('Item:N', title='Crop', legend=None),
-    opacity=alt.condition(crop_selection, alt.value(1), alt.value(0.2)),
- ).transform_filter(
-     country_selection
-).add_params(crop_selection).properties(
+   # opacity=alt.condition(crop_selection, alt.value(1), alt.value(0.2)),
+#   ).transform_filter(
+#       country_selection
+).properties(
    # width=CHART_WIDTH/2,
     height=CHART_HEIGHT,
     title=f'Box Plot: {x_axis_title} by Crop'
@@ -143,7 +143,7 @@ boxplot = alt.Chart(filtered_df).mark_boxplot().encode(
 line_chart = alt.Chart(filtered_df).mark_line(point=True).encode(
     x=alt.X('Year:O', title='Year'),
     y=alt.Y('sum(hg/ha_yield):Q', title='Total Yield (hg/ha)'),
-    color=alt.Color('Item:N', title='Crop', legend=alt.Legend(title='Crop', orient='top')),
+    color=alt.Color('Item:N', title='Crop', legend=alt.Legend(title='Crop', orient='top', columns=5)),
     opacity=alt.condition(crop_selection, alt.value(1), alt.value(0.2)),
     tooltip=[
         alt.Tooltip('Year:O', title='Year'),
@@ -152,7 +152,7 @@ line_chart = alt.Chart(filtered_df).mark_line(point=True).encode(
     ]
 ).add_params(crop_selection).transform_filter(country_selection).properties(
     height=CHART_HEIGHT,
-    title='Crop Yield Over Time by Crop (Filtered by Country)'
+    title='Crop Yield Over Time'
 ).interactive()
 
 
@@ -175,11 +175,11 @@ line_chart = alt.Chart(filtered_df).mark_line(point=True).encode(
 
 layout = alt.vconcat(
     bar,
-    alt.hconcat(scatter, boxplot),
-    line_chart
+    line_chart,
+    scatter
 ).resolve_scale(
     color='independent'
 )
 
 # st.altair_chart(layout, use_container_width=True)
-st.altair_chart(bar & line_chart & scatter, use_container_width=True)
+st.altair_chart(layout, use_container_width=True)
