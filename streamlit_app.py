@@ -15,7 +15,7 @@ df2 = pd.read_csv("group_data_new.csv")
 
 # Smaller title using custom HTML and CSS
 st.title("🌱 Crops & Countries - A 'Grow Your Own' Dashboard 🌱")
-st.write("Welcome to Crops & Countries, the dashboard where :green[**agriculture meets analytics**]! :tulip: :green[**Dig**] into the data of crop yields, climate conditions, and economic trends, and :green[**unearth**] insights that really :green[**grow**] on you. :sunflower: Whether you're :green[**sowing the seeds of curiosity or harvesting hard data**], this user-driven dashboard lets you explore the :green[**soilid**] relationships between crops and their environments. Go ahead and :green[**leaf**] through the layers of data, and let your insights :green[**blossom**]!") 
+st.write("Welcome to Crops & Countries, the dashboard where :green[**agriculture meets analytics**]! :tulip: :green[**Dig**] into the data of crop yields, climate conditions, and economic trends, and :green[**unearth**] insights that really :green[**grow**] on you. :sunflower: Whether you're :green[**sowing the seeds of curiosity or harvesting hard data**], this user-driven dashboard lets you explore the :green[**soilid**] relationships between crops and their environments. :blossom: Go ahead and :green[**leaf**] through the layers of data, and let your insights :green[**blossom**]! 🪴") 
 
 # Filters on Sidebar
 st.sidebar.header("Pick Seeds to 'Grow'")  # Move filters to the sidebar
