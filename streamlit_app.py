@@ -170,6 +170,8 @@ crop_selection = alt.selection_point(
      on='click'
  )
 
+st.subheader("👇 Jump Here to View Your Dashboard!")
+
 # Define a standard width and height for all charts
 CHART_WIDTH = 900
 CHART_HEIGHT = 400
