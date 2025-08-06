@@ -144,8 +144,8 @@ elif crop_selection_drop == "Yams":
     st.image("Yam.jpg", width=600)
     st.write("Yams are tropical tuber crops primarily cultivated for human consumption. They thrive in warm climates with consistent temperatures around 27.5°C and require high rainfall ranging from 50 to 100 mm per week. Optimal growth occurs with moderate sunlight exposure of about 6 to 8 hours daily. As root crops, yams are a vital food source in many regions, valued for their nutritional content and versatility in cooking.")
 elif crop_selection_drop == "None":
-    st.image("All.jpg", width=600)
-    st.write("Data")
+    st.image("crops-growing-in-thailand.jpg", width=600)
+    
 
 # Only scatter will have selection
 country_selection = alt.selection_point(
