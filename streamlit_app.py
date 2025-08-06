@@ -95,8 +95,9 @@ else:
 
 st.image("crops-growing-in-thailand.jpg", width=500)
 st.subheader("👈 Start here to select your desired filters, or 'seeds'!")
+st.markdown('#')
 st.subheader("👇 Need a refresher on crops? Use this dropdown to learn more!")
-
+st.markdown('#')
 # Dropdown for crop selection
 crops_drop = [
     "None Selected",
@@ -169,9 +170,9 @@ crop_selection = alt.selection_point(
      bind='legend',
      on='click'
  )
-
+st.markdown('#')
 st.subheader("👇 Jump Here to View Your Dashboard!")
-
+st.markdown('#')
 # Define a standard width and height for all charts
 CHART_WIDTH = 900
 CHART_HEIGHT = 400
