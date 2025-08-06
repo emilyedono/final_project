@@ -94,8 +94,8 @@ else:
 
 
 st.image("crops-growing-in-thailand.jpg", width=500)
-st.write("👈 Start here to select your desired filters, or 'seeds'!")
-st.write("👇 Need a refresher on crops? Use this dropdown to learn more!")
+st.subheader("👈 Start here to select your desired filters, or 'seeds'!")
+st.subheader("👇 Need a refresher on crops? Use this dropdown to learn more!")
 
 # Dropdown for crop selection
 crops_drop = [
