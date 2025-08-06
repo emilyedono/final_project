@@ -15,9 +15,8 @@ df2 = pd.read_csv("group_data_new.csv")
 
 # Smaller title using custom HTML and CSS
 st.title("🌱 Crops & Countries - A 'Grow Your Own' Dashboard 🌱")
-
-# Set a smaller width for the image (e.g., 400px)
-#st.image("crops-growing-in-thailand.jpg", width=600)
+st.markdown('#')
+st.write("Welcome to Crops & Countries, the dashboard where agriculture meets analytics—no plow required! Dig into the fertile ground of crop yields, climate conditions, and economic trends, and unearth insights that really grow on you. Whether you're sowing the seeds of curiosity or harvesting hard data, this user-driven dashboard lets you explore the soilid relationships between crops and their environments. From rain to gain, sun to funds, we've got it all in the field! So go ahead—leaf through the layers of data, and let your insights blossom!") 
 
 # Filters on Sidebar
 st.sidebar.header("Pick Seeds to 'Grow'")  # Move filters to the sidebar
