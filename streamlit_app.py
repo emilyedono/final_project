@@ -110,7 +110,7 @@ crops = [
     "Yams"
 ]
 
-crop_selection = st.sidebar.selectbox("Select a crop:", crops)
+crop_selection = st.selectbox("Select a crop:", crops)
 
 st.write(f"You selected: {crop_selection}")
 if crop_selection == "Maize":
