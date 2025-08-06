@@ -95,6 +95,9 @@ if country == "All":
 else:
     filtered_df = df[(df["Country"] == country) & (df["Year"].between(*time_range))]
 
+st.write(f":point_left: See this cool toolbar? Start here to select your desired filters, or 'seeds'! {crop_selection_drop}")
+
+
 # Dropdown for crop selection
 crops_drop = [
     "None Selected",
