@@ -23,7 +23,7 @@ st.markdown(
 #st.image("crops-growing-in-thailand.jpg", width=600)
 
 # Filters on Sidebar
-st.sidebar.header("Filters")  # Move filters to the sidebar
+st.sidebar.header("Use These Filters to Plant Your Dashboard's Seeds!")  # Move filters to the sidebar
 
 # if st.sidebar.button("🔄 Reset Click Filters"):
 #     for key in st.session_state.keys():
