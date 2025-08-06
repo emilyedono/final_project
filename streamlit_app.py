@@ -14,7 +14,7 @@ df.rename(columns={"Area": "Country"}, inplace=True)
 df2 = pd.read_csv("group_data_new.csv")
 
 # Smaller title using custom HTML and CSS
-st.header("🌱 Crops & Countries - A 'Grow Your Own' Dashboard 🌱")
+st.title("🌱 Crops & Countries - A 'Grow Your Own' Dashboard 🌱")
 
 # Set a smaller width for the image (e.g., 400px)
 #st.image("crops-growing-in-thailand.jpg", width=600)
