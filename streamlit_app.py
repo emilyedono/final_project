@@ -97,7 +97,6 @@ st.image("crops-growing-in-thailand.jpg", width=500)
 st.subheader("👈 Start here to select your desired filters, or 'seeds'!")
 st.markdown('#')
 st.subheader("👇 Need a refresher on crops? Use this dropdown to learn more!")
-st.markdown('#')
 # Dropdown for crop selection
 crops_drop = [
     "None Selected",
