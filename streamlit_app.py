@@ -28,19 +28,7 @@ st.sidebar.header("Filters")  # Move filters to the sidebar
 #         del st.session_state[key]
 #     st.rerun()
 
-# Temperature unit selector
-temp_unit = st.sidebar.radio(
-    "Temperature Unit",
-    options=["Celsius (°C)", "Fahrenheit (°F)"],
-    index=0
-)
 
-# Ensure 'avg_temp' exists and convert
-if "avg_temp" in df.columns:
-    if temp_unit == "Fahrenheit (°F)":
-        df["avg_temp"] = df["avg_temp"] * 9 / 5 + 32
-else:
-    st.warning("avg_temp column not found in data.")
 
 # Slider: Filter by Year
 df["Year"] = pd.to_datetime(df["Year"], errors='coerce')
@@ -59,6 +47,19 @@ df['Year'] = df['Year'].dt.year
 country_options = ["All"] + sorted(df["country"].dropna().unique())
 country = st.sidebar.selectbox("Filter by Country", options=country_options)
 
+# Temperature unit selector
+temp_unit = st.sidebar.radio(
+    "Temperature Unit",
+    options=["Celsius (°C)", "Fahrenheit (°F)"],
+    index=0
+)
+
+# Ensure 'avg_temp' exists and convert
+if "avg_temp" in df.columns:
+    if temp_unit == "Fahrenheit (°F)":
+        df["avg_temp"] = df["avg_temp"] * 9 / 5 + 32
+else:
+    st.warning("avg_temp column not found in data.")
 # Selectbox: Select Variable
 x_axis_options = ['pesticides_tonnes', 'avg_temp', 'GDP_per_capita_clean', 'food_supply']
 # Show temperature with units
@@ -66,10 +67,10 @@ x_axis_labels = {
     'pesticides_tonnes': 'Pesticides (tonnes)',
     'avg_temp': f'Avg Temp ({"°F" if temp_unit.startswith("Fahrenheit") else "°C"})',
     'GDP_per_capita_clean': 'GDP per Capita',
-    'food_supply': 'Food Supply'
+    'food_supply': 'Food Supply (KCal per person per day)'
 }
 x_axis_label_list = [x_axis_labels[key] for key in x_axis_options]
-x_axis_choice_label = st.sidebar.selectbox("Select Variable", options=x_axis_label_list)
+x_axis_choice_label = st.sidebar.selectbox("Explore Climate Related Indicators", options=x_axis_label_list)
 
 
 # Map label back to x_axis_options key
@@ -123,8 +124,8 @@ bar = alt.Chart(filtered_df).mark_bar(color="#5F4747", height=20).encode(
 ).properties(
     width=CHART_WIDTH,
     height=alt.Step(30),
-    title='Top 10 Countries by Total Yield'
-).interactive()
+    title='Top 10 Countries by Total Yield (Sum)'
+)
 
 # 1. Scatter plot with legend and selection
 scatter = alt.Chart(filtered_df).mark_circle().encode(
@@ -143,21 +144,24 @@ scatter = alt.Chart(filtered_df).mark_circle().encode(
    # width=CHART_WIDTH/2,
     height=CHART_HEIGHT,
     title='Yield vs. ' + x_axis_title
-).interactive()
+)
 
 # 2. Box plot (no selection)
 boxplot = alt.Chart(filtered_df).mark_boxplot().encode(
     x=alt.X('Item:N', title='Crop', axis=alt.Axis(labelAngle=-45)),
     y=alt.Y(f'{x_axis_choice}:Q', title=x_axis_title),
     color=alt.Color('Item:N', title='Crop', legend=None),
-   # opacity=alt.condition(crop_selection, alt.value(1), alt.value(0.2)),
-#   ).transform_filter(
-#       country_selection
-).properties(
-   # width=CHART_WIDTH/2,
+    opacity=alt.condition(crop_selection, alt.value(1), alt.value(0.2)),
+    tooltip=[
+        alt.Tooltip('Item:N', title='Crop'),
+        alt.Tooltip('Year:O', title='Year'),
+        alt.Tooltip('country:N', title='Country'),
+        alt.Tooltip(f'{x_axis_choice}:Q', title=f'{x_axis_title}')
+    ]
+).transform_filter(country_selection).properties(
     height=CHART_HEIGHT,
-    title=f'Box Plot: {x_axis_title} by Crop'
-).interactive()
+    title=f'Distribution of {x_axis_title} by Crop'
+)
 
 # 3. Line chart (no selection)
 line_chart = alt.Chart(filtered_df).mark_line(point=True).encode(
@@ -173,7 +177,7 @@ line_chart = alt.Chart(filtered_df).mark_line(point=True).encode(
 ).add_params(crop_selection).transform_filter(country_selection).properties(
     height=CHART_HEIGHT,
     title='Crop Yield Over Time'
-).interactive()
+)
 
 
 # #st.altair_chart(bar, use_container_width=True)
@@ -196,7 +200,7 @@ line_chart = alt.Chart(filtered_df).mark_line(point=True).encode(
 layout = alt.vconcat(
     bar,
     line_chart,
-    scatter
+    boxplot
 ).resolve_scale(
     color='independent'
 )
