@@ -9,7 +9,9 @@ import pydeck as pdk
 st.set_page_config(page_title="Crop Yield Impact Through Climate Change and Pesticides", layout="wide")
 
 # read in data
-df = pd.read_csv('group_data_new.csv')
+df = pd.read_csv('new_data.csv')
+df.rename(columns={"Area": "Country"}, inplace=True)
+df2 = pd.read_csv("group_data_new.csv")
 
 # Smaller title using custom HTML and CSS
 st.markdown(
@@ -28,12 +30,21 @@ st.sidebar.header("Filters")  # Move filters to the sidebar
 #         del st.session_state[key]
 #     st.rerun()
 
+# Clean merge keys in both DataFrames
+df['Country'] = df['Country'].str.strip().str.upper()
+df2['Area'] = df2['Area'].str.strip().str.upper()
+
+df['Item'] = df['Item'].str.strip()
+df2['Item'] = df2['Item'].str.strip()
+
+df['Year'] = df['Year'].astype(int)
+df2['Year'] = pd.to_datetime(df2['Year'], errors='coerce').dt.year
 
 
 # Slider: Filter by Year
-df["Year"] = pd.to_datetime(df["Year"], errors='coerce')
-min_year = int(df["Year"].dt.year.min())
-max_year = int(df["Year"].dt.year.max())
+df['Year'] = df['Year'].astype(int)  # Just to be sure
+min_year = df['Year'].min()
+max_year = df['Year'].max()
 time_range = st.sidebar.slider(
     "Select Years",
     min_year,
@@ -41,10 +52,11 @@ time_range = st.sidebar.slider(
     (min_year, max_year)
 )
 
-df['Year'] = df['Year'].dt.year
 
+df = df[['Country', 'Year', 'Item', 'Country Climate']]
+df = pd.merge(df2, df, right_on=['Country', 'Year', 'Item'], left_on=['Area', 'Year', 'Item'], how='left')
 # Selectbox: Filter by Country
-country_options = ["All"] + sorted(df["country"].dropna().unique())
+country_options = ["All"] + sorted(df["Country"].dropna().unique())
 country = st.sidebar.selectbox("Filter by Country", options=country_options)
 
 # Temperature unit selector
@@ -81,11 +93,11 @@ x_axis_title = x_axis_labels[x_axis_choice]
 if country == "All":
     filtered_df = df[df["Year"].between(*time_range)]
 else:
-    filtered_df = df[(df["country"] == country) & (df["Year"].between(*time_range))]
+    filtered_df = df[(df["Country"] == country) & (df["Year"].between(*time_range))]
 
 # Only scatter will have selection
 country_selection = alt.selection_point(
-    fields=['country'],
+    fields=['Country'],
     empty='all',
     #bind='legend',
     on='click'
@@ -104,16 +116,16 @@ CHART_HEIGHT = 400
 # Horizontal Bar Chart of Country
 bar = alt.Chart(filtered_df).mark_bar(color="#5F4747", height=20).encode(
     x=alt.X('total_yield:Q', title='Yield (hg/ha)'),
-    y=alt.Y('country:N', title='Country', sort='-x'),
+    y=alt.Y('Country:N', title='Country', sort='-x'),
     opacity=alt.condition(country_selection, alt.value(1), alt.value(0.2)),
 ).transform_aggregate(
     total_yield='sum(hg/ha_yield)',
-    groupby=['country', 'Item']  # Keep crop info for filtering
+    groupby=['Country', 'Item']  # Keep crop info for filtering
 ).transform_filter(
     crop_selection  # Now this works!
 ).transform_aggregate(
     total_yield='sum(total_yield)',  # Re-aggregate across selected crops
-    groupby=['country']
+    groupby=['Country']
 ).transform_window(
     rank='rank(total_yield)',
     sort=[alt.SortField('total_yield', order='descending')]
@@ -122,9 +134,29 @@ bar = alt.Chart(filtered_df).mark_bar(color="#5F4747", height=20).encode(
 ).add_params(
     country_selection
 ).properties(
-    width=CHART_WIDTH,
-    height=alt.Step(30),
-    title='Top 10 Countries by Total Yield (Sum)'
+    width=CHART_WIDTH//2 - 10,
+    height=250,
+    title='Top 10 Countries by Total Crop Yield (Sum)'
+)
+
+bar2 = alt.Chart(filtered_df).mark_bar(color="#5F4747", height=20).encode(
+    x=alt.X(f'mean_choice:Q', title=x_axis_title),
+    y=alt.Y('Country:N', title='Country', sort='-x'),
+    opacity=alt.condition(country_selection, alt.value(1), alt.value(0.2)),
+).transform_aggregate(
+    mean_choice=f'mean({x_axis_choice})',
+    groupby=['Country']  # Keep crop info for filtering
+).transform_window(
+    rank='rank(mean_choice)',
+    sort=[alt.SortField('mean_choice', order='descending')]
+).transform_filter(
+    alt.datum.rank <= 10
+).add_params(
+    country_selection
+).properties(
+    width=CHART_WIDTH//2 - 10,
+    height=250,
+    title=f'Top 10 Countries by Average Yearly {x_axis_title}'
 )
 
 # 1. Scatter plot with legend and selection
@@ -137,7 +169,7 @@ scatter = alt.Chart(filtered_df).mark_circle().encode(
     #     alt.value('lightgray')),
     color=alt.Color('Item:N', legend=None),
     opacity=alt.condition(crop_selection, alt.value(1), alt.value(0.2)),
-    tooltip=['country:N', f'{x_axis_choice}:Q', 'hg/ha_yield:Q', 'Item:N', 'food_supply:Q']
+    tooltip=['Country:N', f'{x_axis_choice}:Q', 'hg/ha_yield:Q', 'Item:N', 'food_supply:Q']
     ).transform_filter(
        country_selection
 ).add_params(crop_selection).properties(
@@ -145,6 +177,48 @@ scatter = alt.Chart(filtered_df).mark_circle().encode(
     height=CHART_HEIGHT,
     title='Yield vs. ' + x_axis_title
 )
+
+scatter2 = alt.Chart(filtered_df).mark_circle().encode(
+    x=alt.X(f'{x_axis_choice}:Q', title=x_axis_title),
+    y=alt.Y('total_yield:Q', title='Total Yield (hg/ha)'),
+    # color=alt.condition(
+    #     crop_selection,
+    #     alt.Color('Item:N', legend=None),
+    #     alt.value('lightgray')),
+    color=alt.Color('Country Climate:N', legend=None),
+    opacity=alt.condition(crop_selection, alt.value(1), alt.value(0.2)),
+    tooltip=['Country:N', 'Year:N', f'{x_axis_choice}:Q', 'total_yield:Q', 'Country Climate:N']
+    ).transform_aggregate(
+        total_yield='sum(hg/ha_yield)',
+        groupby=['Country', 'Year', 'Country Climate']
+     ).transform_filter(
+        country_selection
+).transform_aggregate(
+        total_yield='sum(hg/ha_yield)',
+        groupby=['Year', 'Country Climate']
+).properties(
+   # width=CHART_WIDTH/2,
+    height=CHART_HEIGHT,
+    title='Total Yield (All Crops) vs. ' + x_axis_title
+)
+
+agg_df = filtered_df.groupby(['Country', 'Year', 'Country Climate']).agg(
+    total_yield=('hg/ha_yield', 'sum'),
+    mean_x_axis=(x_axis_choice, 'mean')
+).reset_index()
+
+scatter3 = alt.Chart(agg_df).mark_circle().encode(
+    x=alt.X('mean_x_axis:Q', title=x_axis_title),
+    y=alt.Y('total_yield:Q', title='Total Yield (hg/ha)'),
+    color=alt.Color('Country Climate:N', legend=alt.Legend(title='Country Climate', orient='right')),
+    tooltip=['Country', 'Year', 'Country Climate', 'total_yield', 'mean_x_axis']
+).transform_filter(
+    country_selection
+    ).properties(
+    height=CHART_HEIGHT,
+    title='Total Yield (All Crops) vs. ' + x_axis_title
+)
+
 
 # 2. Box plot (no selection)
 boxplot = alt.Chart(filtered_df).mark_boxplot().encode(
@@ -155,7 +229,7 @@ boxplot = alt.Chart(filtered_df).mark_boxplot().encode(
     tooltip=[
         alt.Tooltip('Item:N', title='Crop'),
         alt.Tooltip('Year:O', title='Year'),
-        alt.Tooltip('country:N', title='Country'),
+        alt.Tooltip('Country:N', title='Country'),
         alt.Tooltip(f'{x_axis_choice}:Q', title=f'{x_axis_title}')
     ]
 ).transform_filter(country_selection).properties(
@@ -197,13 +271,27 @@ line_chart = alt.Chart(filtered_df).mark_line(point=True).encode(
 # # # Line chart at the bottom
 # st.altair_chart(line_chart, use_container_width=True)
 
+
+
 layout = alt.vconcat(
-    bar,
     line_chart,
-    boxplot
+    alt.hconcat(bar, bar2),
+    scatter3
 ).resolve_scale(
     color='independent'
 )
 
+layout = layout.configure_view(stroke=None).configure_concat(spacing=15)
+layout = layout.configure_concat(spacing=15)
+
+layout = layout.properties(
+    autosize=alt.AutoSizeParams(
+        type='pad',
+        contains='padding',
+        resize=True
+    )
+)
+
 # st.altair_chart(layout, use_container_width=True)
 st.altair_chart(layout, use_container_width=True)
+
