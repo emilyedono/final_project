@@ -93,9 +93,9 @@ else:
     filtered_df = df[(df["Country"] == country) & (df["Year"].between(*time_range))]
 
 
-st.image("crops-growing-in-thailand.jpg", width=300)
-st.subheader("👈 See this cool toolbar? Start here to select your desired filters, or 'seeds'!")
-
+st.image("crops-growing-in-thailand.jpg", width=500)
+st.write("👈 Start here to select your desired filters, or 'seeds'!")
+st.write("👇 Need a refresher on crops? Use this dropdown to learn more!")
 
 # Dropdown for crop selection
 crops_drop = [
