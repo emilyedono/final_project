@@ -20,7 +20,7 @@ st.header("🌱 Crops & Countries - A 'Grow Your Own' Dashboard 🌱")
 #st.image("crops-growing-in-thailand.jpg", width=600)
 
 # Filters on Sidebar
-st.sidebar.header("Use These Filters to Grow Your Dashboard!")  # Move filters to the sidebar
+st.sidebar.subheader("These Seeds Change All Charts")  # Move filters to the sidebar
 
 # if st.sidebar.button("🔄 Reset Click Filters"):
 #     for key in st.session_state.keys():
