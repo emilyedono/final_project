@@ -112,7 +112,7 @@ crops_drop = [
 
 crop_selection_drop = st.selectbox("Select a crop:", crops_drop)
 
-st.write(f"You selected: {crop_selection}")
+st.write(f"You selected: {crop_selection_drop}")
 if crop_selection_drop == "Maize":
     st.write("Maize, a member of the grains and grasses category, thrives in both tropical and temperate climates. It is well-suited to regions with low rainfall, typically ranging from 1 to 25 mm per week, and requires moderate light exposure of about 6 to 8 hours daily. The optimal temperature for maize growth is around 22.5°C, which supports healthy development and yield. Maize is a versatile crop with a wide range of uses, including human food, animal feed, and industrial applications, making it a crucial component in global agriculture and food systems.")
 elif crop_selection_drop == "Potatoes":
