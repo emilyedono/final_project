@@ -1,4 +1,4 @@
-import streamlit as st
+dimport streamlit as st
 from PIL import Image
 import os
 import pandas as pd
@@ -95,7 +95,7 @@ if country == "All":
 else:
     filtered_df = df[(df["Country"] == country) & (df["Year"].between(*time_range))]
 
-st.write(f"👈 See this cool toolbar? Start here to select your desired filters, or 'seeds'! {crop_selection_drop}")
+st.header(f"👈 See this cool toolbar? Start here to select your desired filters, or 'seeds'! {crop_selection_drop}")
 
 
 # Dropdown for crop selection
