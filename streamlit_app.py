@@ -112,7 +112,7 @@ crops_drop = [
     "Yams"
 ]
 
-crop_selection_drop = st.selectbox("Curious about a crop? Use this dropdown to learn more!", crops_drop)
+crop_selection_drop = st.selectbox("Select Any Crop", crops_drop)
 
 if crop_selection_drop == "Maize":
     st.write(f"You selected: {crop_selection_drop}")
