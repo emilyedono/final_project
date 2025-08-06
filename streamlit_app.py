@@ -94,9 +94,9 @@ else:
 
 
 st.image("crops-growing-in-thailand.jpg", width=500)
-st.subheader("👈 Start here to select your desired filters, or 'seeds'!")
+st.subheader("👈 Start Here to Select Your Desired Filters, or 'Seeds'!")
 st.markdown('#')
-st.subheader("👇 Need a refresher on crops? Use this dropdown to learn more!")
+st.subheader("👇 Select a Crop to Grow Your Knowledge!")
 # Dropdown for crop selection
 crops_drop = [
     "None Selected",
@@ -112,7 +112,7 @@ crops_drop = [
     "Yams"
 ]
 
-crop_selection_drop = st.selectbox("Select Any Crop", crops_drop)
+crop_selection_drop = st.selectbox("Select A Crop to Learn More", crops_drop)
 
 if crop_selection_drop == "Maize":
     st.write(f"You selected: {crop_selection_drop}")
