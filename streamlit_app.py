@@ -6,7 +6,7 @@ import altair as alt
 import numpy as np
 import pydeck as pdk
 
-st.set_page_config(page_title="Crop Yield Impact Through Climate Change and Pesticides", layout="wide")
+st.set_page_config(page_title="Crops & Countries Interactive Dashboard", layout="wide")
 
 # read in data
 df = pd.read_csv('new_data.csv')
@@ -14,16 +14,13 @@ df.rename(columns={"Area": "Country"}, inplace=True)
 df2 = pd.read_csv("group_data_new.csv")
 
 # Smaller title using custom HTML and CSS
-st.markdown(
-    "<h2 style='font-size:2rem; margin-bottom: 1rem;'>🌱 Crops & Countries - A 'Plant Your Own Seeds' Dashboard 🌱</h2>",
-    unsafe_allow_html=True,
-)
+st.header("🌱 Crops & Countries - A 'Grow Your Own' Dashboard 🌱")
 
 # Set a smaller width for the image (e.g., 400px)
 #st.image("crops-growing-in-thailand.jpg", width=600)
 
 # Filters on Sidebar
-st.sidebar.header("Use These Filters to Plant Your Dashboard's Seeds!")  # Move filters to the sidebar
+st.sidebar.header("Use These Filters to Grow Your Dashboard!")  # Move filters to the sidebar
 
 # if st.sidebar.button("🔄 Reset Click Filters"):
 #     for key in st.session_state.keys():
