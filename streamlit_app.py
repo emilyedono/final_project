@@ -281,6 +281,7 @@ scatter3 = alt.Chart(agg_df).mark_circle().encode(
     x=alt.X('mean_x_axis:Q', title=x_axis_title),
     y=alt.Y('total_yield:Q', scale=alt.Scale(type='log'), title='Log-Scale Total Yield (hg/ha)'),
     color=alt.Color('Country Climate:N', legend=alt.Legend(title='Country Climate', orient='bottom')),
+    opacity=alt.condition(country_selection, alt.value(1), alt.value(0.05)),
     tooltip=[
     alt.Tooltip('Country:N', title='Country'),
     alt.Tooltip('Year:O', title='Year'),
@@ -288,9 +289,7 @@ scatter3 = alt.Chart(agg_df).mark_circle().encode(
     alt.Tooltip('total_yield:Q', title='Total Yield (hg/ha)', format=',.0f'),
     alt.Tooltip('mean_x_axis:Q', title=x_axis_title, format='.2f')
 ]
-).transform_filter(
-    country_selection
-    ).properties(
+).properties(
     height=CHART_HEIGHT,
     title='Log-Scale Total Yield vs. ' + x_axis_title
 )
