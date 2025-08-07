@@ -118,7 +118,7 @@ if crop_selection_drop == "Maize":
     st.write("Maize, a member of the grains and grasses category, thrives in both tropical and temperate climates. It is well-suited to regions with low rainfall, typically ranging from 1 to 25 mm per week, and requires moderate light exposure of about 6 to 8 hours daily. The optimal temperature for maize growth is around 22.5°C, which supports healthy development and yield. Maize is a versatile crop with a wide range of uses, including human food, animal feed, and industrial applications, making it a crucial component in global agriculture and food systems.")
 elif crop_selection_drop == "Potatoes":
     st.write(f"You selected: {crop_selection_drop}")
-    st.image("Potatoes.jpg", width=600)
+    st.image("Potato.jpg", width=600)
     st.write("Potatoes are temperate-climate tuber crops that grow best under moderate environmental conditions. They require a weekly rainfall of about 25 to 50 mm and benefit from moderate light exposure of 6 to 8 hours per day. The optimal temperature for potato growth is around 17.5°C, which promotes healthy tuber development. Classified as a root crop, potatoes are primarily used for human food and also have significant industrial applications, making them a vital staple in many regions around the world.")
 elif crop_selection_drop == "Rice, paddy":
     st.write(f"You selected: {crop_selection_drop}")
