@@ -94,7 +94,7 @@ else:
 st.image("crops-growing-in-thailand.jpg", width=500)
 st.subheader("👈 Start Here to Select Your Desired Filters, or 'Seeds'! 👈")
 st.markdown('#')
-st.subheader("👇 Select a Crop to Grow Your Knowledge! 👇")
+st.subheader("👇 Select a Crop to Grow Your Knowledge and Filter the Dashboard! 👇")
 # Dropdown for crop selection
 crops_drop = [
     "None Selected",
@@ -113,7 +113,7 @@ crops_drop = [
 crop_selection_drop = st.selectbox("Select A Crop to Learn More", crops_drop)
 if crop_selection_drop != "None Selected":
     filtered_df = filtered_df[filtered_df["Item"]==crop_selection_drop]
-    
+
 if crop_selection_drop == "Maize":
     st.write(f"You selected: {crop_selection_drop}")
     st.image("Maize.jpg", width=600)
@@ -313,11 +313,30 @@ boxplot = alt.Chart(filtered_df).mark_boxplot().encode(
     title=f'Distribution of {x_axis_title} by Crop'
 )
 
+custom_crop_colors = alt.Scale(
+    domain=[
+        "Maize", "Potatoes", "Rice, paddy", "Sorghum", "Soybeans",
+        "Wheat", "Cassava", "Sweet potatoes", "Plantains and others", "Yams"
+    ],
+    range=[
+        "#FFD700",  # Maize - Gold
+        "#7DECF0",  # Potatoes - Sienna
+        "#1E90FF",  # Rice - Dodger Blue
+        "#423997",  # Sorghum - Dark Red
+        "#32CD32",  # Soybeans - Lime Green
+        "#DAA520",  # Wheat - Goldenrod
+        "#B8474C",  # Cassava - SaddleBrown
+        "#FF8C00",  # Sweet Potatoes - Dark Orange
+        "#228B22",  # Plantains - Forest Green
+        "#800080",  # Yams - Purple
+    ]
+)
+
 # 3. Line chart (no selection)
 line_chart = alt.Chart(filtered_df).mark_line(point=True).encode(
     x=alt.X('Year:O', title='Year'),
     y=alt.Y('sum(hg/ha_yield):Q', title='Total Yield (hg/ha)'),
-    color=alt.Color('Item:N', title='Crop', legend=alt.Legend(title='Crop', orient='top', columns=5)),
+    color=alt.Color('Item:N', title='Crop', legend=alt.Legend(title='Crop', orient='top', columns=5), scale=custom_crop_colors),
     opacity=alt.condition(crop_selection, alt.value(1), alt.value(0.2)),
     tooltip=[
     alt.Tooltip('Year:O', title='Year'),
