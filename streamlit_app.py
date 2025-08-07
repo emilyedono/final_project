@@ -92,9 +92,9 @@ else:
 
 
 st.image("crops-growing-in-thailand.jpg", width=500)
-st.subheader("👈 Start Here to Select Your Desired Filters, or 'Seeds'!")
+st.subheader("👈 Start Here to Select Your Desired Filters, or 'Seeds'! 👈")
 st.markdown('#')
-st.subheader("👇 Select a Crop to Grow Your Knowledge!")
+st.subheader("👇 Select a Crop to Grow Your Knowledge! 👇")
 # Dropdown for crop selection
 crops_drop = [
     "None Selected",
@@ -167,8 +167,7 @@ crop_selection = alt.selection_point(
      bind='legend',
      on='click'
  )
-st.markdown('#')
-st.subheader("👇 Jump Here to View Your Dashboard!")
+st.subheader("👇 Jump Here to View Your Dashboard! 👇")
 st.markdown('#')
 # Define a standard width and height for all charts
 CHART_WIDTH = 900
@@ -356,3 +355,6 @@ layout = layout.properties(
 # st.altair_chart(layout, use_container_width=True)
 st.altair_chart(layout, use_container_width=True)
 
+st.markdown('#')
+st.subheader("A Special Thanks From the Data Scientists - Adam, Emily, and Zannie")
+st.image([adam.jpg,emily.jpg,zannie.jpg]) 
