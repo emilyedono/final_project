@@ -280,7 +280,7 @@ agg_df = filtered_df.groupby(['Country', 'Year', 'Country Climate']).agg(
 scatter3 = alt.Chart(agg_df).mark_circle().encode(
     x=alt.X('mean_x_axis:Q', title=x_axis_title),
     y=alt.Y('total_yield:Q', scale=alt.Scale(type='log'), title='Log-Scale Total Yield (hg/ha)'),
-    color=alt.Color('Country Climate:N', legend=alt.Legend(title='Country Climate', orient='right')),
+    color=alt.Color('Country Climate:N', legend=alt.Legend(title='Country Climate', orient='bottom')),
     tooltip=[
     alt.Tooltip('Country:N', title='Country'),
     alt.Tooltip('Year:O', title='Year'),
