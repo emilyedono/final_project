@@ -6,7 +6,7 @@ import altair as alt
 import numpy as np
 import pydeck as pdk
 
-st.set_page_config(page_title="Crop Yield Impact Through Climate Change and Pesticides", layout="wide")
+st.set_page_config(page_title="Crops & Countries Interactive Dashboard", layout="wide")
 
 # read in data
 df = pd.read_csv('new_data.csv')
@@ -14,16 +14,11 @@ df.rename(columns={"Area": "Country"}, inplace=True)
 df2 = pd.read_csv("group_data_new.csv")
 
 # Smaller title using custom HTML and CSS
-st.markdown(
-    "<h2 style='font-size:2rem; margin-bottom: 1rem;'>Impact of Climate Change and Pesticide Use on Global Crop Yields 🌱</h2>",
-    unsafe_allow_html=True,
-)
-
-# Set a smaller width for the image (e.g., 400px)
-#st.image("crops-growing-in-thailand.jpg", width=600)
+st.title("🌱 Crops & Countries - A 'Grow Your Own' Dashboard 🌱")
+st.write("Welcome to Crops & Countries, the dashboard where :green[**agriculture meets analytics**]! :tulip: :green[**Dig**] into the data of crop yields, climate conditions, and economic trends, and :green[**unearth**] insights that really :green[**grow**] on you. :sunflower: Whether you're :green[**sowing the seeds of curiosity or harvesting hard data**], this user-driven dashboard lets you explore the :green[**soilid**] relationships between crops and their environments. :blossom: Go ahead and :green[**leaf**] through the layers of data, and let your insights :green[**blossom**]! 🪴") 
 
 # Filters on Sidebar
-st.sidebar.header("Filters")  # Move filters to the sidebar
+st.sidebar.header("Pick Seeds to 'Grow'")  # Move filters to the sidebar
 
 # if st.sidebar.button("🔄 Reset Click Filters"):
 #     for key in st.session_state.keys():
@@ -95,6 +90,70 @@ if country == "All":
 else:
     filtered_df = df[(df["Country"] == country) & (df["Year"].between(*time_range))]
 
+
+st.image("crops-growing-in-thailand.jpg", width=500)
+st.subheader("👈 Start Here to Select Your Desired Filters, or 'Seeds'! 👈")
+st.markdown('#')
+st.subheader("👇 Select a Crop to Grow Your Knowledge! 👇")
+# Dropdown for crop selection
+crops_drop = [
+    "None Selected",
+    "Maize",
+    "Potatoes",
+    "Rice, paddy",
+    "Sorghum",
+    "Soybeans",
+    "Wheat",
+    "Cassava",
+    "Sweet potatoes",
+    "Plantains and others",
+    "Yams"
+]
+
+crop_selection_drop = st.selectbox("Select A Crop to Learn More", crops_drop)
+
+if crop_selection_drop == "Maize":
+    st.write(f"You selected: {crop_selection_drop}")
+    st.image("Maize.jpg", width=600)
+    st.write("Maize, a member of the grains and grasses category, thrives in both tropical and temperate climates. It is well-suited to regions with low rainfall, typically ranging from 1 to 25 mm per week, and requires moderate light exposure of about 6 to 8 hours daily. The optimal temperature for maize growth is around 22.5°C, which supports healthy development and yield. Maize is a versatile crop with a wide range of uses, including human food, animal feed, and industrial applications, making it a crucial component in global agriculture and food systems.")
+elif crop_selection_drop == "Potatoes":
+    st.write(f"You selected: {crop_selection_drop}")
+    st.image("Potato.jpg", width=600)
+    st.write("Potatoes are temperate-climate tuber crops that grow best under moderate environmental conditions. They require a weekly rainfall of about 25 to 50 mm and benefit from moderate light exposure of 6 to 8 hours per day. The optimal temperature for potato growth is around 17.5°C, which promotes healthy tuber development. Classified as a root crop, potatoes are primarily used for human food and also have significant industrial applications, making them a vital staple in many regions around the world.")
+elif crop_selection_drop == "Rice, paddy":
+    st.write(f"You selected: {crop_selection_drop}")
+    st.image("Rice.jpg", width=600)
+    st.write("Rice is a staple crop widely grown in tropical regions, where it thrives under high rainfall conditions of 50 to 100 mm per week. It requires moderate sunlight, typically 6 to 8 hours per day, and grows optimally at a temperature of 27.5°C. As a member of the grains and grasses category, rice plays a crucial role in global food security. Its primary use is for human consumption, serving as a dietary cornerstone for billions of people around the world.")
+elif crop_selection_drop == "Sorghum":
+    st.write(f"You selected: {crop_selection_drop}")
+    st.image("Sorghum.jpg", width=600)
+    st.write("Sorghum is a resilient crop that thrives in tropical and desert climates, making it well-suited for regions with challenging growing conditions. It requires high rainfall levels, typically between 50 to 100 mm per week, and moderate sunlight exposure of 6 to 8 hours daily. The optimal temperature for sorghum growth is around 28.5°C. Belonging to the grains and grasses category, sorghum serves multiple purposes—ranging from human food and animal feed to various industrial uses. Its adaptability and versatility make it a valuable crop in both subsistence and commercial agriculture.")
+elif crop_selection_drop == "Soybeans":
+    st.write(f"You selected: {crop_selection_drop}")
+    st.image("Soybeans.jpg", width=600)
+    st.write("Soybeans are a versatile legume crop well-suited to temperate climates, where they grow effectively under low rainfall conditions ranging from 1 to 25 mm per week. They require moderate light exposure of 6 to 8 hours per day and perform best at an optimal temperature of 25°C. As members of the legume family, soybeans are rich in protein and serve a wide range of purposes. Their uses include human food products such as tofu and soy milk, animal feed, and various industrial applications, making them a crucial component of both agriculture and the global economy.")
+elif crop_selection_drop == "Wheat":
+    st.write(f"You selected: {crop_selection_drop}")
+    st.image("Wheat.jpg", width=600)
+    st.write("Wheat is a major crop that thrives in temperate and Mediterranean climates, where it benefits from high rainfall levels ranging from 50 to 100 mm per week. It requires moderate sunlight, about 6 to 8 hours daily, and grows best at an optimal temperature of 20°C. Classified under the grains and grasses category, wheat is one of the most widely cultivated and consumed crops globally. Its primary uses include human food—such as bread, pasta, and flour—animal feed, and a variety of industrial applications, making it a foundational element in global food systems and economies.")
+elif crop_selection_drop == "Cassava":
+    st.write(f"You selected: {crop_selection_drop}")
+    st.image("Cassava.jpg", width=600)
+    st.write("Cassava is a robust tuber crop ideally suited to tropical climates, where it flourishes under high rainfall conditions of 50 to 100 mm per week. Unlike many other crops, cassava requires high light exposure, typically 10 to 12 hours of sunlight daily, and grows optimally at a temperature of 27°C. Classified among tubers and root crops, cassava is a vital source of carbohydrates and plays a key role in food security for millions of people in tropical regions. Its uses extend beyond human food to include animal feed and industrial applications, highlighting its versatility and economic importance in agriculture.")
+elif crop_selection_drop == "Sweet potatoes":
+    st.write(f"You selected: {crop_selection_drop}")
+    st.image("SweetPotato.jpg", width=600)
+    st.write("Sweet potatoes are nutrient-rich tuber crops that grow well in both tropical and temperate climates. They thrive under moderate rainfall conditions, typically receiving 25 to 50 mm of water per week, and require moderate sunlight exposure of 6 to 8 hours daily. The optimal temperature for sweet potato cultivation is around 23.5°C, which supports healthy root development. As members of the tubers and root crops category, sweet potatoes are primarily used for human consumption, valued for their high nutritional content and versatility in a wide range of traditional and modern dishes.")
+elif crop_selection_drop == "Plantains and others":
+    st.write(f"You selected: {crop_selection_drop}")
+    st.image("Plantain.jpg", width=600)
+    st.write("Plantains are starchy fruits that thrive in tropical climates, where they grow best under moderate rainfall levels of 25 to 50 mm per week. They require moderate sunlight, around 6 to 8 hours daily, and perform optimally at a temperature of 27.5°C. As a key crop in many tropical regions, plantains are classified as starchy fruits and are primarily used for human food. They serve as a staple in many diets, offering a rich source of carbohydrates and playing an important role in food security and culinary traditions around the world.")
+elif crop_selection_drop == "Yams":
+    st.write(f"You selected: {crop_selection_drop}")
+    st.image("Yam.jpg", width=600)
+    st.write("Yams are tropical tuber crops primarily cultivated for human consumption. They thrive in warm climates with consistent temperatures around 27.5°C and require high rainfall ranging from 50 to 100 mm per week. Optimal growth occurs with moderate sunlight exposure of about 6 to 8 hours daily. As root crops, yams are a vital food source in many regions, valued for their nutritional content and versatility in cooking.")
+    
+
 # Only scatter will have selection
 country_selection = alt.selection_point(
     fields=['Country'],
@@ -108,7 +167,8 @@ crop_selection = alt.selection_point(
      bind='legend',
      on='click'
  )
-
+st.subheader("👇 Jump Here to View Your Dashboard! 👇")
+st.markdown('#')
 # Define a standard width and height for all charts
 CHART_WIDTH = 900
 CHART_HEIGHT = 400
@@ -295,3 +355,8 @@ layout = layout.properties(
 # st.altair_chart(layout, use_container_width=True)
 st.altair_chart(layout, use_container_width=True)
 
+st.markdown('#')
+st.subheader("A Special Thanks From the Data Scientists - Adam, Emily, and Zannie")
+st.image("adam.jpg", width=100) 
+st.image("emily.jpg", width=100)
+st.image("zannie.jpg", width=100)
