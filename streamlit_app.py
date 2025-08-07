@@ -111,7 +111,9 @@ crops_drop = [
 ]
 
 crop_selection_drop = st.selectbox("Select A Crop to Learn More", crops_drop)
-
+if crop_selection_drop != "None Selected":
+    filtered_df = filtered_df[filtered_df["Item"]==crop_selection_drop]
+    
 if crop_selection_drop == "Maize":
     st.write(f"You selected: {crop_selection_drop}")
     st.image("Maize.jpg", width=600)
@@ -178,6 +180,10 @@ bar = alt.Chart(filtered_df).mark_bar(color="#5F4747", height=20).encode(
     x=alt.X('total_yield:Q', title='Yield (hg/ha)'),
     y=alt.Y('Country:N', title='Country', sort='-x'),
     opacity=alt.condition(country_selection, alt.value(1), alt.value(0.2)),
+    tooltip=[
+    alt.Tooltip('Country:N', title='Country'),
+    alt.Tooltip('total_yield:Q', title='Total Yield (hg/ha)', format=',.0f')
+]
 ).transform_aggregate(
     total_yield='sum(hg/ha_yield)',
     groupby=['Country', 'Item']  # Keep crop info for filtering
@@ -194,7 +200,7 @@ bar = alt.Chart(filtered_df).mark_bar(color="#5F4747", height=20).encode(
 ).add_params(
     country_selection
 ).properties(
-    width=CHART_WIDTH//2 - 10,
+    width=CHART_WIDTH//2 - 100,
     height=250,
     title='Top 10 Countries by Total Crop Yield (Sum)'
 )
@@ -203,6 +209,10 @@ bar2 = alt.Chart(filtered_df).mark_bar(color="#5F4747", height=20).encode(
     x=alt.X(f'mean_choice:Q', title=x_axis_title),
     y=alt.Y('Country:N', title='Country', sort='-x'),
     opacity=alt.condition(country_selection, alt.value(1), alt.value(0.2)),
+    tooltip=[
+    alt.Tooltip('Country:N', title='Country'),
+    alt.Tooltip('mean_choice:Q', title=x_axis_title, format='.2f')
+]
 ).transform_aggregate(
     mean_choice=f'mean({x_axis_choice})',
     groupby=['Country']  # Keep crop info for filtering
@@ -214,7 +224,7 @@ bar2 = alt.Chart(filtered_df).mark_bar(color="#5F4747", height=20).encode(
 ).add_params(
     country_selection
 ).properties(
-    width=CHART_WIDTH//2 - 10,
+    width=CHART_WIDTH//2 - 100,
     height=250,
     title=f'Top 10 Countries by Average Yearly {x_axis_title}'
 )
@@ -269,14 +279,20 @@ agg_df = filtered_df.groupby(['Country', 'Year', 'Country Climate']).agg(
 
 scatter3 = alt.Chart(agg_df).mark_circle().encode(
     x=alt.X('mean_x_axis:Q', title=x_axis_title),
-    y=alt.Y('total_yield:Q', title='Total Yield (hg/ha)'),
+    y=alt.Y('total_yield:Q', scale=alt.Scale(type='log'), title='Log-Scale Total Yield (hg/ha)'),
     color=alt.Color('Country Climate:N', legend=alt.Legend(title='Country Climate', orient='right')),
-    tooltip=['Country', 'Year', 'Country Climate', 'total_yield', 'mean_x_axis']
+    tooltip=[
+    alt.Tooltip('Country:N', title='Country'),
+    alt.Tooltip('Year:O', title='Year'),
+    alt.Tooltip('Country Climate:N', title='Climate'),
+    alt.Tooltip('total_yield:Q', title='Total Yield (hg/ha)', format=',.0f'),
+    alt.Tooltip('mean_x_axis:Q', title=x_axis_title, format='.2f')
+]
 ).transform_filter(
     country_selection
     ).properties(
     height=CHART_HEIGHT,
-    title='Total Yield (All Crops) vs. ' + x_axis_title
+    title='Log-Scale Total Yield vs. ' + x_axis_title
 )
 
 
@@ -304,10 +320,10 @@ line_chart = alt.Chart(filtered_df).mark_line(point=True).encode(
     color=alt.Color('Item:N', title='Crop', legend=alt.Legend(title='Crop', orient='top', columns=5)),
     opacity=alt.condition(crop_selection, alt.value(1), alt.value(0.2)),
     tooltip=[
-        alt.Tooltip('Year:O', title='Year'),
-        alt.Tooltip('Item:N', title='Crop'),
-        alt.Tooltip('sum(hg/ha_yield):Q', title='Total Yield (hg/ha)')
-    ]
+    alt.Tooltip('Year:O', title='Year'),
+    alt.Tooltip('Item:N', title='Crop'),
+    alt.Tooltip('sum(hg/ha_yield):Q', title='Total Yield (hg/ha)', format=',.0f')
+]
 ).add_params(crop_selection).transform_filter(country_selection).properties(
     height=CHART_HEIGHT,
     title='Crop Yield Over Time'
